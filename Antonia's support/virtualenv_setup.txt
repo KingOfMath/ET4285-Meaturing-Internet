@@ -1,0 +1,9 @@
+# Install virtualenv
+sudo apt-get install virtualenv
+
+# Create and load a virtualenv. Loading needs to be done for each new terminal
+virtualenv ./venv --python=python3
+source ./venv/bin/activate
+
+# Install necessary packages (only needed once)
+pip3 install stable-baselines[mpi] tensorflow==1.14 gym[atari]
