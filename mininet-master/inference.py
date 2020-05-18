@@ -19,33 +19,42 @@ def main():
     model = PPO1.load(model_name)
 
     # TODO start the mininet network
-
+    sr=10
     class SingleSwitchTopo( Topo ):                                                                                               
                                                                                                       
       def build( self, count=1 ):                                                                                      
-        hosts = [ self.addHost( 'h%d' % i ,1.0)                                                                                   
+        hosts = [ self.addHost( 'h%d' % i )                                                                                   
                   for i in range( 1, count + 1 ) ]                                                                                
         s1 = self.addSwitch( 's1' )                                                                                           
         for h in hosts:                                                                                                       
-            self.addLink( h, s1, bw=10, delay='5ms', loss=2,
+            self.addLink( h, s1, bw=sr, delay='5ms', loss=2,
                           max_queue_size=1000, use_htb=True )                                                                                             
     # link rate = 10, max queue zie= 1000, loss percentage= 2%
-    net = Mininet( topo=SingleSwitchTopo( 3 ) )                                                                               
-    net.start()                                                                                                               
-    dumpNodeConnections(net.hosts)
+    state=[]
+    for i in range(0,10):
+        net = Mininet( topo=SingleSwitchTopo( 3 ) )                                                                               
+        net.start()                                                                                                               
+        dumpNodeConnections(net.hosts)
+        h1,h4=net.get('h1','h3')
+        a=net.pingFull([h1,h4])
+        net.monitor()
+        perf_array=net.iperf((h1,h4))                                                                                                                
+        net.stop()   
+        latency_grad=0 #(a[0][2][2]-a[0][2][0])/
+        latency_rat=a[0][2][1]/a[0][2][0]
+        sending_rat=sr/float(perf_array[0].rsplit(' ',1)[0])
+        print(perf_array[0])
+        print(a[0][2][2])
+        print(latency_rat)
+        state.append(latency_grad)
+        state.append(latency_rat)
+        state.append(sending_rat)
     
-    h1,h4=net.get('h1','h3')
-    net.pingFull([h1,h4])
-    net.monitor()
-    perf_array=net.iperf((h1,h4))                                                                                                                
-    net.stop()   
-    latency_grad=0
-    print(perf_array[0])
-
     # this model takes as state an input 30x1
     # TODO: this needs to be replaced with real values from the network later on
-    state = np.ones((30,), dtype=np.float32)
-
+    #state = np.ones((30,), dtype=np.float32)
+    state=np.asarray(state)
+    np.reshape(state,(30,))
     # TODO start traffic
 
     # run inference for some steps
@@ -56,11 +65,32 @@ def main():
         # The action is an increment to the current sending rate: sending_rate_t+1 = sending_rate_t + action
         action, _ = model.predict(state)
         print("RL model predicted: %s" % action)
-
+        sr=action
+        state=[]
+        for i in range(0,10):
+            net = Mininet( topo=SingleSwitchTopo( 3 ) )                                                                               
+            net.start()                                                                                                               
+            dumpNodeConnections(net.hosts)
+            h1,h4=net.get('h1','h3')
+            a=net.pingFull([h1,h4])
+            net.monitor()
+            perf_array=net.iperf((h1,h4))                                                                                                                
+            net.stop()   
+            latency_grad=0 #(a[0][2][2]-a[0][2][0])/
+            latency_rat=a[0][2][1]/a[0][2][0]
+            sending_rat=sr/float(perf_array[0].rsplit(' ',1)[0])
+            print(perf_array[0])
+            print(a[0][2][2])
+            print(latency_rat)
+            state.append(latency_grad)
+            state.append(latency_rat)
+            state.append(sending_rat)
         # Update the state to account for effects of action
         # TODO: this needs to be replaced with real values from the network later on
-        state = state * 1.1
-        count += 1
+        #state = state * 1.1
+        #count += 1
+        state=np.asarray(state)
+        np.reshape(state,(30,))
 
 if __name__ == '__main__':
     main()
