@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     cout << "Connected to the server!" << endl;
     int bytesRead, bytesWritten = 0;
     struct timeval start1, end1;
-    
+    cout<<"Bytes_written    Bytes_read    Elapsed_time    start_time";
     while(1)
     {   
         gettimeofday(&start1, NULL);
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
             break;
         }
         bytesWritten += send(clientSd, (char*)&msg, strlen(msg), 0);
-        cout << "Awaiting server response..." << endl;
+        //cout << "Awaiting server response..." << endl;
         memset(&msg, 0, sizeof(msg));//clear the buffer
         bytesRead += recv(clientSd, (char*)&msg, sizeof(msg), 0);
         if(!strcmp(msg, "exit"))
@@ -97,20 +97,19 @@ int main(int argc, char *argv[])
         //cout << "Server: " << msg << endl;
         gettimeofday(&end1, NULL);
     //close(clientSd);
-    cout << "********Session********" << endl;
-    cout << "Bytes written: " << bytesWritten << 
-    " Bytes read: " << bytesRead << endl;
-    cout << "Elapsed time: " << (((float)end1.tv_sec*1000.0 + (float)end1.tv_usec/1000.0) - ((float)start1.tv_sec*1000.0 + (float)start1.tv_usec/1000.0)) << " millisecs" << endl;
+    //cout << "********Session********" << endl;
+    cout <<  bytesWritten << "    " << bytesRead;
+    cout << "    " << (((float)end1.tv_sec*1000.0 + (float)end1.tv_usec/1000.0) - ((float)start1.tv_sec*1000.0 + (float)start1.tv_usec/1000.0));
       bytesWritten=0;
-    cout<<" start time: "<<((float)start1.tv_sec*1000.0 + (float)start1.tv_usec/1000.0)  << " millisecs" << endl;
+    cout<<"    "<<((float)start1.tv_sec*1000.0 + (float)start1.tv_usec/1000.0)  << "    " << endl;
     sleep(1);
     }
-    gettimeofday(&end1, NULL);
+    /**gettimeofday(&end1, NULL);
     close(clientSd);
     cout << "********Session********" << endl;
     cout << "Bytes written: " << bytesWritten << " Bytes read: " << bytesRead << endl;
     cout << "Elapsed time: " << (end1.tv_sec- start1.tv_sec) << " secs" << endl;
 
     cout << "Connection closed" << endl;
-    return 0;    
+    return 0;    */
 }

@@ -69,17 +69,19 @@ int main(int argc, char *argv[])
     }
     cout << "Connected with client!" << endl;
     //lets keep track of the session time
-    struct timeval start1, end1;
+    struct timeval start1, end1, sendt;
     gettimeofday(&start1, NULL);
     //also keep track of the amount of data sent as well
     int bytesRead, bytesWritten = 0;
+    cout<<"Bytes_written    Bytes_read    Elapsed_time";
     while(1)
     {
         //receive a message from the client (listen)
-        cout << "Awaiting client response..." << endl;
+        //cout << "Awaiting client response..." << endl;
         gettimeofday(&start1, NULL);
         memset(&msg, 0, sizeof(msg));//clear the buffer
         bytesRead += recv(newSd, (char*)&msg, sizeof(msg), 0);
+        gettimeofday(&sendt, NULL);
         /**if(!strcmp(msg, "exit"))
         {
             cout << "Client has quit the session" << endl;
@@ -102,9 +104,9 @@ int main(int argc, char *argv[])
         //send the message to client
         bytesWritten += send(newSd, (char*)&msg, strlen(msg), 0);
         gettimeofday(&end1, NULL);
-        cout << "********Session********" << endl;
-    cout << "Bytes written: " << bytesWritten << " Bytes read: " << bytesRead << endl;
-    cout << "Elapsed time: " << (((float)end1.tv_sec*1000.0 + (float)end1.tv_usec/1000.0) - ((float)start1.tv_sec*1000.0 + (float)start1.tv_usec/1000.0)) << " secs" << endl;
+        //cout << "********Session********" << endl;
+    cout << bytesWritten << "    " << bytesRead;
+    cout << "    " << (((float)end1.tv_sec*1000.0 + (float)end1.tv_usec/1000.0) - ((float)start1.tv_sec*1000.0 + (float)start1.tv_usec/1000.0)) <<"    "<<((float)sendt.tv_sec*1000.0 + (float)sendt.tv_usec/1000.0)<<endl;
       bytesWritten=0;
 
     }
@@ -112,9 +114,9 @@ int main(int argc, char *argv[])
     gettimeofday(&end1, NULL);
     close(newSd);
     close(serverSd);
-    cout << "********Session********" << endl;
+    /**cout << "********Session********" << endl;
     cout << "Bytes written: " << bytesWritten << " Bytes read: " << bytesRead << endl;
     cout << "Elapsed time: " << (end1.tv_sec - start1.tv_sec) << " secs" << endl;
-    cout << "Connection closed..." << endl;
+    cout << "Connection closed..." << endl;*/
     return 0;   
 }
