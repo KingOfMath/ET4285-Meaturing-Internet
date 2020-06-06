@@ -46,15 +46,15 @@ int main(int argc, char *argv[])
 
     printf("Current: %s\n", buf);
     strcpy(buf, "cubic");
-
+    char * cong_algorithm = "bbr";
     len = strlen(buf);
 
-    if (setsockopt(clientSd, IPPROTO_TCP, TCP_CONGESTION, buf, len) != 0)
+    if (setsockopt(clientSd, IPPROTO_TCP, TCP_CONGESTION, cong_algorithm, strlen(cong_algorithm)+1) != 0)
     {
         perror("setsockopt");
         return -1;
     }
-    printf("new: %s\n", buf);
+    printf("new: %s\n", cong_algorithm);
     //try to connect...
     int status = connect(clientSd,
                          (sockaddr*) &sendSockAddr, sizeof(sendSockAddr));

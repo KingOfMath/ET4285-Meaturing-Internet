@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <arpa/inet.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -39,6 +40,24 @@ int main(int argc, char *argv[])
     //open stream oriented socket with internet address
     //also keep track of the socket descriptor
     int serverSd = socket(AF_INET, SOCK_STREAM, 0);
+    char buf[256];
+    socklen_t len;
+    if (getsockopt(serverSd, IPPROTO_TCP, TCP_CONGESTION, buf, &len) != 0)
+    {
+        perror("getsockopt");
+        return -1;
+    }
+
+    printf("Current: %s\n", buf);
+    strcpy(buf, "cubic");
+    char * cong_algorithm = "bbr";
+    len = strlen(buf);
+
+    if (setsockopt(serverSd, IPPROTO_TCP, TCP_CONGESTION, cong_algorithm, strlen(cong_algorithm)+1) != 0)
+    {
+        perror("setsockopt");
+        return -1;
+    }
     if(serverSd < 0)
     {
         cerr << "Error establishing the server socket" << endl;
