@@ -66,6 +66,9 @@ def fairness_utility(x1, x2):
 #     p1 = x1 / (x1 + x2)
 #     p2 = x2 / (x1 + x2)
 
+def fairness_QoE(x1, x2, H=2, L=0):
+    return 1 - 2 * (np.std(x1, x2)) / (H - L)
+
 
 def average(data):
     return sum(data) / len(data)
