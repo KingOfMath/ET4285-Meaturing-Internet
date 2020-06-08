@@ -45,8 +45,8 @@ int main(int argc, char *argv[])
     }
 
     printf("Current: %s\n", buf);
-    strcpy(buf, "cubic");
-    char * cong_algorithm = "bbr";
+    strcpy(buf, "vega");
+    char * cong_algorithm = "cubic";
     len = strlen(buf);
 
     if (setsockopt(clientSd, IPPROTO_TCP, TCP_CONGESTION, cong_algorithm, strlen(cong_algorithm)+1) != 0)
