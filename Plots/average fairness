@@ -1,0 +1,11 @@
+Average RTT fairness of 3 measurement scenarios
+
+Aurora&Cubic 0.8838 var 0.0158
+Aurora&Vegas 0.9030 var 0.0092
+Aurora&BBR 0.8887 var 0.0138
+
+Average Throughput fairness of 3 measurement scenarios
+
+Aurora&Cubic 0.8875 var 0.0147
+Aurora&Vegas 0.8573 var 0.0163
+Aurora&BBR  var 
