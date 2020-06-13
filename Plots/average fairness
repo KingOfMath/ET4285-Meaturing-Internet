@@ -8,4 +8,4 @@ Average Throughput fairness of 3 measurement scenarios
 
 Aurora&Cubic 0.8875 var 0.0147
 Aurora&Vegas 0.8573 var 0.0163
-Aurora&BBR  var 
+Aurora&BBR 0.8673 var 0.0216 
